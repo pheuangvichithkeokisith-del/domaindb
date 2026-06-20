@@ -1,1 +1,551 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChareonSub Wholesale - Web API & AI Chat Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter and Noto Sans Lao -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Lao:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom styling to ensure smooth fonts and animations -->
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Lao', sans-serif;
+            background-color: #0b132b;
+            color: #f1f5f9;
+        }
+        /* Custom scrollbar for chat box and JSON viewer */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        /* Glowing borders for futuristic look */
+        .neon-border-blue {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .neon-border-gold {
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen overflow-x-hidden flex flex-col justify-between">
 
+    <!-- Interactive Background Canvas (Replaces video files with lightweight, interactive cyber grids) -->
+    <canvas id="bgCanvas" class="absolute top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"></canvas>
+
+    <!-- Top Header Navigation -->
+    <header class="w-full bg-slate-900/80 backdrop-blur-md border-b border-blue-500/20 py-4 px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-4 z-10">
+        <div class="flex items-center gap-3">
+            <div class="bg-gradient-to-tr from-yellow-500 to-blue-600 p-2.5 rounded-xl shadow-lg">
+                <i class="fa-solid fa-boxes-packing text-2xl text-slate-900"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-yellow-400">
+                    ຈະເລີນຊັບ ຂາຍສົ່ງ - ChareonSub Wholesale
+                </h1>
+                <p class="text-xs text-blue-300 font-mono">Live Web API & Smart AI Assistant</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <!-- Digital Clock -->
+            <div class="text-right hidden sm:block">
+                <p id="live-time" class="text-lg font-mono text-yellow-400 font-bold">12:00:00 PM</p>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">System Monitor Active</p>
+            </div>
+            <div class="h-8 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <!-- Connection Badge -->
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                GitHub Pages API Active
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Workspace Dashboard Grid -->
+    <main class="flex-grow max-w-[1600px] mx-auto w-full px-4 md:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 z-10">
+        
+        <!-- Left Column: Currency Monitors & Wholesale Calculator (4 Cols) -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- Currency Rates Monitor Widget -->
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800 neon-border-blue">
+                <h2 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> ອັດຕາແລກປ່ຽນປັດຈຸບັນ (Live Exchange Rates)
+                </h2>
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- THB Currency Card -->
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 flex justify-between items-center hover:border-yellow-500/40 transition duration-300">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🇹🇭</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-300">เงินบาทไทย (THB)</h3>
+                                <p class="text-xs text-slate-500">Base: 1 THB</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p id="rate-thb" class="text-xl font-bold text-yellow-400 font-mono">650.25</p>
+                            <p class="text-[10px] text-slate-400">Lao Kip (LAK)</p>
+                        </div>
+                    </div>
+                    <!-- USD Currency Card -->
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 flex justify-between items-center hover:border-yellow-500/40 transition duration-300">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🇺🇸</span>
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-300">ดอลลาร์สหรัฐ (USD)</h3>
+                                <p class="text-xs text-slate-500">Base: 1 USD</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p id="rate-usd" class="text-xl font-bold text-yellow-400 font-mono">22,400.00</p>
+                            <p class="text-[10px] text-slate-400">Lao Kip (LAK)</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Simulated Sync Button -->
+                <button onclick="refreshMockRates()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate"></i> จำลองການດຶງຂໍ້ມູນລ່າສຸດ (Fetch Latest Rates)
+                </button>
+            </div>
+
+            <!-- Wholesale Margin Price Calculator -->
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800">
+                <h2 class="text-base font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> ເຄື່ອງຄຳນວນລາຄາສົ່ງ (Wholesale Margin Calculator)
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">ລາຄານຳເຂົ້າ (Import Price):</label>
+                        <div class="relative rounded-md shadow-sm">
+                            <input type="number" id="calc-import" value="1000" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-yellow-300 font-mono focus:outline-none focus:border-blue-500">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <select id="calc-currency" onchange="runCalculator()" class="bg-transparent border-none text-xs text-slate-400 focus:ring-0">
+                                    <option value="THB" class="bg-slate-950">THB</option>
+                                    <option value="USD" class="bg-slate-950">USD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">ກຳໄລຂາຍສົ່ງທີ່ຕ້ອງການ (Wholesale Profit Margin):</label>
+                        <div class="relative">
+                            <input type="number" id="calc-profit" value="10" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-sm text-slate-300 font-mono focus:outline-none focus:border-blue-500">
+                            <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500">%</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/60 mt-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-slate-400">ລາຄາຂາຍສົ່ງແນະນຳ (Suggested Wholesale Price LAK):</span>
+                            <span id="calc-result" class="text-lg font-bold text-emerald-400 font-mono">715,275 LAK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Middle Column: Live AI Smart Assistant Chat (5 Cols) -->
+        <section class="lg:col-span-5 flex flex-col h-[550px] lg:h-auto min-h-[500px]">
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-slate-800 flex flex-col h-full overflow-hidden neon-border-gold">
+                <!-- Chat Header -->
+                <div class="bg-slate-950 p-4 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-yellow-500 to-amber-600 flex items-center justify-center text-slate-950 shadow-md">
+                            <i class="fa-solid fa-robot text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-sm text-slate-200">ຈະເລີນຊັບ Smart Assistant</h2>
+                            <p class="text-[10px] text-emerald-400 flex items-center gap-1">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span> Online (Gemini AI Powered)
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-slate-500 hover:text-slate-300" title="Clear Chat History">
+                        <i class="fa-solid fa-trash-can"></i> ล้างແຊທ
+                    </button>
+                </div>
+
+                <!-- Chat Messages History Container -->
+                <div id="chat-box" class="flex-grow p-4 overflow-y-auto space-y-4">
+                    <!-- Default Greeting Message from AI -->
+                    <div class="flex gap-3 max-w-[85%]">
+                        <div class="h-8 w-8 rounded-full bg-amber-500/20 text-yellow-400 flex items-center justify-center flex-shrink-0 text-xs">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="bg-slate-800/80 rounded-2xl rounded-tl-none p-3.5 text-sm text-slate-200 leading-relaxed shadow-sm">
+                            <p class="font-bold text-xs text-yellow-400 mb-1">ChareonSub Bot</p>
+                            ສະບາຍດີ! ຍິນດີຕ້ອນຮັບສູ່ລະບົບຜູ້ຊ່ວຍອັດສະລິຍະຮ້ານຈະເລີນຊັບ ຂ້າພະເຈົ້າສາມາດຊ່ວຍທ່ານຄຳນວນລາຄາສົ່ງ, ແປງຄ່າເງິນ, ຫຼືຮ່າງປະກາດຮ້ານໄດ້ທັນທີ. ຖາມຂ້າພະເຈົ້າໄດ້ເລີຍ!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested AI Prompts Fast-Click Buttons -->
+                <div class="px-4 py-2 bg-slate-950/40 border-t border-slate-800/60 overflow-x-auto whitespace-nowrap flex gap-2">
+                    <button onclick="useQuickPrompt('ຄຳນວນລາຄາສົ່ງສິນຄ້າຕົ້ນທຶນ 500 ບາດ ກໍາໄລ 15% ເປັນເງິນກີບ')" class="bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700 text-slate-300 text-xs py-1.5 px-3 rounded-full transition">
+                        📊 ຄຳນວນລາຄາສົ່ງ
+                    </button>
+                    <button onclick="useQuickPrompt('ຮ່າງປະກາດຮ້ານແຈ້ງເລື່ອງວັນພັກວັນປີໃໝ່ລາວ ເປັນພາສາລາວ')" class="bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700 text-slate-300 text-xs py-1.5 px-3 rounded-full transition">
+                        📝 ຮ່າງປະກາດຮ້ານ
+                    </button>
+                    <button onclick="useQuickPrompt('ແນະນຳວິທີຂຽນ VBA ໃນ Access ເພື່ອດຶງ API ຈາກ GitHub ງ່າຍໆ')" class="bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700 text-slate-300 text-xs py-1.5 px-3 rounded-full transition">
+                        💻 ຂໍ້ແນະນຳ VBA
+                    </button>
+                </div>
+
+                <!-- Chat Input Controls -->
+                <div class="p-3 bg-slate-950 border-t border-slate-800 flex items-center gap-2">
+                    <input type="text" id="chat-input" onkeydown="handleChatKey(event)" placeholder="ພິມຄຳຖາມຂອງທ່ານຢູ່ບ່ອນນີ້..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl py-3 px-4 text-sm text-slate-200 focus:outline-none focus:border-yellow-400 transition">
+                    <button onclick="sendChatMessage()" class="bg-gradient-to-tr from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-900 font-bold h-11 w-11 rounded-xl flex items-center justify-center transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: API Output & Active Announcement Control (3 Cols) -->
+        <section class="lg:col-span-3 flex flex-col gap-6">
+            
+            <!-- Active Announcement Widget -->
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800">
+                <h2 class="text-sm font-bold text-red-400 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn animate-bounce"></i> ປະກາດດ່ວນລ່າສຸດ (Active Announcement)
+                </h2>
+                <div class="bg-slate-950/80 p-4 rounded-xl border border-red-500/20 text-xs leading-relaxed text-slate-300">
+                    <p id="active-announce">ແຈ້ງເຕືອນພະນັກງານ: ວັນນີ້ງົດຮັບເງິນໂອນຂ້າມທະນາຄານຊົ່ວຄາວ ປິດປັບປຸງລະບົບຊ່ວງບ່າຍ</p>
+                </div>
+                <div class="mt-4 space-y-2">
+                    <label class="block text-[11px] text-slate-500 uppercase tracking-wider font-bold">ປ່ຽນປະກາດ (Edit Announcement):</label>
+                    <textarea id="edit-announce-text" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-300 focus:outline-none focus:border-red-400 h-20 resize-none">ແຈ້ງເຕືອນພະນັກງານ: ວັນນີ້ງົດຮັບເງິນໂອນຂ້າມທະນາຄານຊົ່ວຄາວ ປິດປັບປຸງລະບົບຊ່ວງບ່າຍ</textarea>
+                    <button onclick="updateAnnouncement()" class="w-full bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 font-semibold py-1.5 px-3 rounded-xl text-xs transition duration-200">
+                        <i class="fa-solid fa-floppy-disk"></i> ອັບເດດປະກາດ (Update API)
+                    </button>
+                </div>
+            </div>
+
+            <!-- JSON API Viewer Monitor -->
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800 flex-grow flex flex-col">
+                <h2 class="text-sm font-bold text-slate-300 mb-3 flex items-center justify-between">
+                    <span><i class="fa-solid fa-code"></i> ໄຟລ໌ API JSON (Raw Data)</span>
+                    <span class="text-[9px] bg-blue-500/20 text-blue-300 py-0.5 px-2 rounded-full font-mono">api.json</span>
+                </h2>
+                <div class="bg-slate-950/90 rounded-xl p-3 border border-slate-800 font-mono text-[10px] text-emerald-400 overflow-auto flex-grow max-h-[220px]">
+                    <pre><code id="json-viewer">{
+  "status": "success",
+  "exchange_rate": {
+    "THB_to_LAK": 650.25,
+    "USD_to_LAK": 22400.00
+  },
+  "shop_announcement": "ແຈ້ງເຕືອນພະນັກງານ: ວັນນີ້ງົດຮັບເງິນໂອນຂ້າມທະນາຄານຊົ່ວຄາວ ປິດປັບປຸງລະບົບຊ່ວງບ່າຍ"
+}</code></pre>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-2 italic leading-relaxed">
+                    *นี่คือข้อความในรูปแบบ JSON ที่โปรแกรม Microsoft Access ของพี่วิ่งเข้าดึงผ่านลิงก์ GitHub Pages ไปแสดงผลแบบออฟไลน์
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer System Status -->
+    <footer class="w-full bg-slate-950 border-t border-slate-800/80 py-3 px-6 text-center text-xs text-slate-500">
+        <p>&copy; 2026 ChareonSub Wholesale Management System. Designed with Advanced Hybrid API Solutions.</p>
+    </footer>
+
+    <!-- Application Logic & Gemini AI Integration Script -->
+    <script>
+        // --- 1. Global State Management ---
+        const liveRates = {
+            THB_to_LAK: 650.25,
+            USD_to_LAK: 22400.00
+        };
+
+        let currentAnnouncement = "ແຈ້ງເຕືອນພະນັກງານ: ວັນນີ້ງົດຮັບເງິນໂອນຂ້າມທະນາຄານຊົ່ວຄາວ ປິດປັບປຸງລະບົບຊ່ວງບ່າຍ";
+
+        // --- 2. Live Clock Handler ---
+        function startLiveClock() {
+            const clockEl = document.getElementById('live-time');
+            setInterval(() => {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString();
+            }, 1000);
+        }
+
+        // --- 3. Interactive Web background Generator (Canvas Grid) ---
+        function initCanvasBg() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            const particles = [];
+            const maxParticles = 60;
+
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 2 + 1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = "rgba(59, 130, 246, 0.4)";
+                ctx.strokeStyle = "rgba(59, 130, 246, 0.08)";
+
+                particles.forEach((p, index) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    for (let j = index + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            animate();
+        }
+
+        // --- 4. Interactive Rates Mock & JSON Update ---
+        function updateJSONViewer() {
+            const viewer = document.getElementById('json-viewer');
+            const payload = {
+                status: "success",
+                exchange_rate: {
+                    THB_to_LAK: liveRates.THB_to_LAK,
+                    USD_to_LAK: liveRates.USD_to_LAK
+                },
+                shop_announcement: currentAnnouncement
+            };
+            viewer.textContent = JSON.stringify(payload, null, 2);
+        }
+
+        function refreshMockRates() {
+            // Randomly vary exchange rates slightly to simulate live feed updates
+            liveRates.THB_to_LAK = parseFloat((650 + (Math.random() - 0.5) * 10).toFixed(2));
+            liveRates.USD_to_LAK = parseFloat((22400 + (Math.random() - 0.5) * 200).toFixed(2));
+
+            document.getElementById('rate-thb').textContent = liveRates.THB_to_LAK.toLocaleString('en-US');
+            document.getElementById('rate-usd').textContent = liveRates.USD_to_LAK.toLocaleString('en-US');
+
+            updateJSONViewer();
+            runCalculator();
+
+            // Notify user using custom inline toast instead of alert()
+            showToast("ຈຳລອງການອັບເດດຄ່າເງິນສຳເລັດ! (Rates Synced)");
+        }
+
+        function updateAnnouncement() {
+            const text = document.getElementById('edit-announce-text').value;
+            currentAnnouncement = text;
+            document.getElementById('active-announce').textContent = text;
+            updateJSONViewer();
+            showToast("ອັບເດດປະກາດໃນ API ສຳເລັດ! (API JSON updated)");
+        }
+
+        // --- 5. Wholesale Price Calculator Logic ---
+        function runCalculator() {
+            const importPrice = parseFloat(document.getElementById('calc-import').value) || 0;
+            const profitPct = parseFloat(document.getElementById('calc-profit').value) || 0;
+            const currency = document.getElementById('calc-currency').value;
+
+            let rate = 1;
+            if (currency === 'THB') rate = liveRates.THB_to_LAK;
+            if (currency === 'USD') rate = liveRates.USD_to_LAK;
+
+            const baseInLak = importPrice * rate;
+            const finalWholesalePrice = baseInLak * (1 + (profitPct / 100));
+
+            document.getElementById('calc-result').textContent = Math.round(finalWholesalePrice).toLocaleString('en-US') + " LAK";
+        }
+
+        // --- 6. Custom Toast Notification (No alert() as mandated) ---
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-6 right-6 bg-slate-900 border border-yellow-500/40 text-yellow-400 px-5 py-3 rounded-xl shadow-2xl z-50 transition duration-300 animate-bounce text-sm";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // --- 7. Gemini AI Integration (Smart Chat Assistant) ---
+        const systemPrompt = `You are "ChareonSub Smart Assistant", a professional and friendly AI helper for "ChareonSub Wholesale Store" (ร้านเจริญทรัพย์ - ຈະເລີນຊັບ). You help the owner and cashiers calculate wholesale profit margins, convert currencies (THB, USD, LAK), write shop announcements in Lao, and draft VBA scripts for MS Access integration. Always provide short, highly practical answers. Answer in Lao or Thai depending on the user input. Speak with respect and professionalism.`;
+
+        async function sendChatMessage() {
+            const inputEl = document.getElementById('chat-input');
+            const query = inputEl.value.trim();
+            if (!query) return;
+
+            // Render User Message
+            renderMessage(query, 'user');
+            inputEl.value = '';
+
+            // Render Typing Indicator
+            const typingId = renderTypingIndicator();
+
+            try {
+                // Call Gemini-3-Flash API directly
+                const apiKey = ""; // Canvas runtime injects API key automatically if empty
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: query }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const aiResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                // Remove typing indicator
+                document.getElementById(typingId).remove();
+
+                if (aiResponse) {
+                    renderMessage(aiResponse, 'ai');
+                } else {
+                    renderMessage("ຂໍອະໄພ, ລະບົບຂັດຂ້ອງຊົ່ວຄາວ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ. (No response data)", 'ai');
+                }
+            } catch (error) {
+                document.getElementById(typingId).remove();
+                renderMessage("Error connecting to Gemini API. Please check internet connection.", 'ai');
+                console.error("Gemini Error:", error);
+            }
+        }
+
+        function renderMessage(text, sender) {
+            const chatBox = document.getElementById('chat-box');
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = sender === 'user' ? "flex gap-3 max-w-[85%] ml-auto justify-end" : "flex gap-3 max-w-[85%]";
+
+            if (sender === 'user') {
+                messageWrapper.innerHTML = `
+                    <div class="bg-blue-600 rounded-2xl rounded-tr-none p-3.5 text-sm text-white shadow-sm">
+                        <p class="font-bold text-xs text-blue-200 mb-1">ພະນັກງານ (Staff)</p>
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            } else {
+                messageWrapper.innerHTML = `
+                    <div class="h-8 w-8 rounded-full bg-amber-500/20 text-yellow-400 flex items-center justify-center flex-shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-slate-800/80 rounded-2xl rounded-tl-none p-3.5 text-sm text-slate-200 leading-relaxed shadow-sm">
+                        <p class="font-bold text-xs text-yellow-400 mb-1">ChareonSub Bot</p>
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            }
+            chatBox.appendChild(messageWrapper);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function renderTypingIndicator() {
+            const chatBox = document.getElementById('chat-box');
+            const indicatorId = 'typing-' + Date.now();
+            const typingWrapper = document.createElement('div');
+            typingWrapper.id = indicatorId;
+            typingWrapper.className = "flex gap-3 max-w-[85%]";
+            typingWrapper.innerHTML = `
+                <div class="h-8 w-8 rounded-full bg-amber-500/20 text-yellow-400 flex items-center justify-center flex-shrink-0 text-xs">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="bg-slate-800/80 rounded-2xl rounded-tl-none p-3.5 text-sm text-slate-400 shadow-sm flex items-center gap-1.5">
+                    <span class="h-2 w-2 rounded-full bg-slate-500 animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="h-2 w-2 rounded-full bg-slate-500 animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="h-2 w-2 rounded-full bg-slate-500 animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+            `;
+            chatBox.appendChild(typingWrapper);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return indicatorId;
+        }
+
+        function clearChat() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = `
+                <div class="flex gap-3 max-w-[85%]">
+                    <div class="h-8 w-8 rounded-full bg-amber-500/20 text-yellow-400 flex items-center justify-center flex-shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-slate-800/80 rounded-2xl rounded-tl-none p-3.5 text-sm text-slate-200 leading-relaxed shadow-sm">
+                        <p class="font-bold text-xs text-yellow-400 mb-1">ChareonSub Bot</p>
+                        ສະບາຍດີ! ຍິນດີຕ້ອນຮັບສູ່ລະບົບຜູ້ຊ່ວຍອັດສະລິຍະຮ້ານຈະເລີນຊັບ ຂ້າພະເຈົ້າສາມາດຊ່ວຍທ່ານຄຳນວນລາຄາສົ່ງ, ແແປງຄ່າເງິນ, ຫຼືຮ່າງປະກາດຮ້ານໄດ້ທັນທີ. ຖາມຂ້າພະເຈົ້າໄດ້ເລີຍ!
+                    </div>
+                </div>
+            `;
+        }
+
+        function useQuickPrompt(text) {
+            document.getElementById('chat-input').value = text;
+            sendChatMessage();
+        }
+
+        function handleChatKey(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        // --- 8. Initialization On Window Load ---
+        window.onload = function() {
+            startLiveClock();
+            initCanvasBg();
+            updateJSONViewer();
+            runCalculator();
+
+            // Attach input event listener for wholesale calculator
+            document.getElementById('calc-import').addEventListener('input', runCalculator);
+            document.getElementById('calc-profit').addEventListener('input', runCalculator);
+        }
+    </script>
+</body>
+</html>
