@@ -85,48 +85,28 @@
         <!-- Left Column: Currency Monitors & Wholesale Calculator (4 Cols) -->
         <section class="lg:col-span-4 flex flex-col gap-6">
             
-            <!-- Currency Rates Monitor Widget -->
+            <!-- Local Access Database Connector Widget (NEW ADDITION) -->
             <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800 neon-border-blue">
-                <h2 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line"></i> ອັດຕາແລກປ່ຽນປັດຈຸບັນ (Live Exchange Rates)
+                <h2 class="text-lg font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-database"></i> ເຊື່ອມຕໍ່ຖານຂໍ້ມູນໃນເຄື່ອງ (Local DB Access)
                 </h2>
-                <div class="grid grid-cols-1 gap-4">
-                    <!-- THB Currency Card -->
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 flex justify-between items-center hover:border-yellow-500/40 transition duration-300">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">🇹🇭</span>
-                            <div>
-                                <h3 class="font-bold text-sm text-slate-300">เงินบาทไทย (THB)</h3>
-                                <p class="text-xs text-slate-500">Base: 1 THB</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p id="rate-thb" class="text-xl font-bold text-yellow-400 font-mono">650.25</p>
-                            <p class="text-[10px] text-slate-400">Lao Kip (LAK)</p>
-                        </div>
+                <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                    ດຶງຂໍ້ມູນລາຍການສິນຄ້າ ແລະ ສະຕັອກຫຼ້າສຸດໂດຍກົງຈາກໄຟລ໌ <code class="text-yellow-400">pos1CS2.accdb</code> ຜ່ານລະບົບ Local API Bridge.
+                </p>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400">ສະຖານະການເຊື່ອມຕໍ່ (Local Server Status):</span>
+                        <span id="local-db-status" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                            Disconnected
+                        </span>
                     </div>
-                    <!-- USD Currency Card -->
-                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 flex justify-between items-center hover:border-yellow-500/40 transition duration-300">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">🇺🇸</span>
-                            <div>
-                                <h3 class="font-bold text-sm text-slate-300">ดอลลาร์สหรัฐ (USD)</h3>
-                                <p class="text-xs text-slate-500">Base: 1 USD</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p id="rate-usd" class="text-xl font-bold text-yellow-400 font-mono">22,400.00</p>
-                            <p class="text-[10px] text-slate-400">Lao Kip (LAK)</p>
-                        </div>
-                    </div>
+                    <button onclick="fetchLocalAccessData()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-sync animate-spin" id="sync-icon" style="animation-play-state: paused;"></i> ດຶງຂໍ້ມູນສະຕັອກຈິງ (Fetch Live ACCDB)
+                    </button>
                 </div>
-                <!-- Simulated Sync Button -->
-                <button onclick="refreshMockRates()" class="w-full mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-xl text-xs transition duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-rotate"></i> จำลองການດຶງຂໍ້ມູນລ່າສຸດ (Fetch Latest Rates)
-                </button>
             </div>
 
-            <!-- Wholesale Margin Price Calculator -->
+            <!-- Currency Rates Monitor Widget -->
             <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800">
                 <h2 class="text-base font-bold text-yellow-400 mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-calculator"></i> ເຄື່ອງຄຳນວນລາຄາສົ່ງ (Wholesale Margin Calculator)
@@ -222,6 +202,20 @@
         <!-- Right Column: API Output & Active Announcement Control (3 Cols) -->
         <section class="lg:col-span-3 flex flex-col gap-6">
             
+            <!-- Local ACCDB Live Stock Viewer (NEW ADDITION) -->
+            <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800 flex flex-col h-[280px]">
+                <h2 class="text-sm font-bold text-yellow-400 mb-3 flex items-center justify-between">
+                    <span><i class="fa-solid fa-boxes-stacked"></i> ລາຍການສິນຄ້າຈິງ (ACCDB Stocks)</span>
+                    <span id="stock-count-badge" class="text-[9px] bg-slate-950 text-slate-400 py-0.5 px-2 rounded-full font-mono">0 Items</span>
+                </h2>
+                <div class="overflow-y-auto flex-grow space-y-2 pr-1" id="local-stock-container">
+                    <div class="text-center text-slate-500 py-8 text-xs italic">
+                        <i class="fa-solid fa-database block text-2xl mb-2 text-slate-700"></i>
+                        ຍັງບໍ່ມີຂໍ້ມູນ, ກະລຸນາກົດປຸ່ມດຶງຂໍ້ມູນສະຕັອກຈິງ
+                    </div>
+                </div>
+            </div>
+
             <!-- Active Announcement Widget -->
             <div class="bg-slate-900/60 backdrop-blur-md rounded-2xl p-6 border border-slate-800">
                 <h2 class="text-sm font-bold text-red-400 mb-3 flex items-center gap-2">
@@ -277,6 +271,71 @@
         };
 
         let currentAnnouncement = "ແຈ້ງເຕືອນພະນັກງານ: ວັນນີ້ງົດຮັບເງິນໂອນຂ້າມທະນາຄານຊົ່ວຄາວ ປິດປັບປຸງລະບົບຊ່ວງບ່າຍ";
+
+        // --- 1.2 FETCH LOCAL ACCESS DB DATA FUNCTION (NEW CODE) ---
+        async function fetchLocalAccessData() {
+            const statusBadge = document.getElementById('local-db-status');
+            const syncIcon = document.getElementById('sync-icon');
+            const container = document.getElementById('local-stock-container');
+            const badgeCount = document.getElementById('stock-count-badge');
+            
+            // Start spinning animation
+            syncIcon.style.animationPlayState = 'running';
+            
+            try {
+                // Fetch live data from local running python server bridge
+                const response = await fetch('http://127.0.0.1:5000/api/products');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Update connection UI to active green status
+                    statusBadge.className = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                    statusBadge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Connected`;
+                    
+                    // Render products inside dashboard list
+                    container.innerHTML = '';
+                    badgeCount.textContent = `${result.data.length} Items`;
+                    
+                    result.data.forEach(prod => {
+                        const isLowStock = prod.pQty <= 10;
+                        const card = document.createElement('div');
+                        card.className = "bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs";
+                        card.innerHTML = `
+                            <div>
+                                <h4 class="font-bold text-slate-200">${prod.pName}</h4>
+                                <p class="text-[10px] text-slate-500">ID: ${prod.pId} | Price: ${prod.salePrice.toLocaleString()} LAK</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold font-mono ${isLowStock ? 'text-rose-400' : 'text-emerald-400'}">${prod.pQty}</span>
+                                <p class="text-[9px] text-slate-500">${isLowStock ? 'Low Stock' : 'In Stock'}</p>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                    
+                    showToast("ດຶງຂໍ້ມູນຈາກ Access Database ໃນເຄື່ອງສຳເລັດ! (ACCDB Connected)");
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                // Revert UI status to disconnected red status
+                statusBadge.className = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30";
+                statusBadge.textContent = "Disconnected";
+                
+                container.innerHTML = `
+                    <div class="text-center text-rose-400/80 py-8 text-xs leading-relaxed">
+                        <i class="fa-solid fa-triangle-exclamation block text-2xl mb-2 text-rose-500"></i>
+                        ບໍ່ສາມາດເຊື່ອມຕໍ່ Local API Bridge ໄດ້.<br>
+                        <span class="text-[10px] text-slate-500">ກະລຸນາກວດສອບວ່າໄດ້ເປີດໄຟລ໌ python ໃນເຄື່ອງແລ້ວຫຼືບໍ່.</span>
+                    </div>
+                `;
+                badgeCount.textContent = "0 Items";
+                showToast("ການເຊื่อมຕໍ່ຫຼົ້ມເຫຼວ: Connection Refused");
+            } finally {
+                // Pause spinning animation after query ends
+                syncIcon.style.animationPlayState = 'paused';
+            }
+        }
 
         // --- 2. Live Clock Handler ---
         function startLiveClock() {
